@@ -19,6 +19,7 @@ mod python;
 mod rust;
 mod scala;
 mod swift;
+mod dockerfile;
 
 use ast_grep_core::language::TSLanguage;
 use ast_grep_core::meta_var::MetaVariable;
@@ -99,6 +100,8 @@ impl_lang_expando!(Rust, language_rust, 'µ');
 //https://docs.swift.org/swift-book/documentation/the-swift-programming-language/lexicalstructure/#Identifiers
 impl_lang_expando!(Swift, language_swift, 'µ');
 
+impl_lang_expando!(Dockerfile, language_docker, 'µ');
+
 // Stub Language without preprocessing
 // Language Name, tree-sitter-name, alias, extension
 impl_lang!(Dart, language_dart);
@@ -137,6 +140,7 @@ pub enum SupportLang {
   Thrift,
   Tsx,
   TypeScript,
+  Dockerfile,
 }
 
 impl SupportLang {
@@ -144,7 +148,7 @@ impl SupportLang {
     use SupportLang::*;
     &[
       C, Cpp, CSharp, Css, Dart, Go, Html, Java, JavaScript, Json, Kotlin, Lua, Python, Ruby, Rust,
-      Scala, Swift, Thrift, Tsx, TypeScript,
+      Scala, Swift, Thrift, Tsx, TypeScript, Dockerfile
     ]
   }
 
@@ -208,6 +212,7 @@ const fn alias(lang: &SupportLang) -> &[&str] {
     Thrift => &["thrift"],
     TypeScript => &["ts", "typescript"],
     Tsx => &["tsx"],
+    Dockerfile => &["dockerfile"],
   }
 }
 
@@ -250,6 +255,7 @@ macro_rules! execute_lang_method {
       S::Thrift => Thrift.$method($($pname,)*),
       S::Tsx => Tsx.$method($($pname,)*),
       S::TypeScript => TypeScript.$method($($pname,)*),
+      S::Dockerfile => Dockerfile.$method($($pname,)*),
     }
   }
 }
@@ -301,6 +307,7 @@ fn extensions(lang: &SupportLang) -> &[&str] {
     Thrift => &["thrift"],
     TypeScript => &["ts", "cts", "mts"],
     Tsx => &["tsx"],
+    Dockerfile => &["dockerfile"],
   }
 }
 
@@ -353,6 +360,7 @@ fn file_types(lang: &SupportLang) -> Types {
     L::Scala => builder.select("scala"),
     L::Swift => builder.select("swift"),
     L::Thrift => builder.select("thrift"),
+    L::Dockerfile => builder.select("docker"),
     L::Tsx => {
       builder
         .add("mytsx", "*.tsx")

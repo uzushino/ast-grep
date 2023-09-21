@@ -68,6 +68,9 @@ mod parser_implementation {
   pub fn language_typescript() -> TSLanguage {
     tree_sitter_typescript::language_typescript().into()
   }
+  pub fn language_docker() -> TSLanguage {
+    tree_sitter_dockerfile::language().into()
+  }
 }
 
 #[cfg(not(feature = "builtin-parser"))]
